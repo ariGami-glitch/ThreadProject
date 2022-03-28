@@ -1,8 +1,8 @@
-
+#include <pthread.h> 
 typedef struct msgq {
-    int value;
-    pthread_cond_t  cond;
-    pthread_mutex_t lock;
+    int num_msgs;
+    char **msgs;
+    int current_num;
 } msgq;
 
 struct msgq *msgq_init(int num_msgs);
