@@ -9,13 +9,15 @@ struct msgq *msgq_init(int num_msgs) {
     return m;
 }
 int msgq_send(struct msgq *mq, char *msg) {
-
+return 10;
 }
 char *msgq_recv(struct msgq *mq) {
 
+
+    return "lol";
 }
 int msgq_len(struct msgq *mq) {
-
+return 10;
 }
 void msgq_show(struct msgq *mq) {
 
