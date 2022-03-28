@@ -6,15 +6,17 @@
 
 struct msgq *msgq_init(int num_msgs) {
     struct msgq *m = malloc(sizeof(struct msgq));
+
     return m;
 }
 int msgq_send(struct msgq *mq, char *msg) {
 return 10;
 }
 char *msgq_recv(struct msgq *mq) {
-
-
-    return "lol";
+    char *msg = mq->msgs[mq->current_num];
+    free(mq->msgs[mq->current_num]);
+    
+    return msg;
 }
 int msgq_len(struct msgq *mq) {
 return 10;
