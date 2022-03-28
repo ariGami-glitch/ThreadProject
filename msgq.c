@@ -15,12 +15,12 @@ return 10;
 char *msgq_recv(struct msgq *mq) {
     char *msg = mq->msgs[mq->current_num];
     free(mq->msgs[mq->current_num]);
-    
+
     return msg;
 }
 int msgq_len(struct msgq *mq) {
 return 10;
 }
 void msgq_show(struct msgq *mq) {
-
+printf("JKASDLFJASF");
 }
