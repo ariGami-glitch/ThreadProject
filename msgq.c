@@ -2,7 +2,7 @@
 #include <stdio.h>
 #include <pthread.h>
 #include "msgq.h"
-//#include "zemaphore.h"
+#include "zemaphore.h"
 
 struct msgq *head;
 struct msgq *tail;
@@ -15,9 +15,10 @@ struct msgq *msgq_init(int num_msgs) {
     printf("Current size of message queue: %d\n", currsize);
     return m;
 }
-int msgq_send(struct msgq *mq, char *msg) {
+int msgq_send(struct msgq *mq, char *msg) { //the producer in this case
+
     
-    return 10;
+    return 1;
 }
 char *msgq_recv(struct msgq *mq) {
     //char *msg = mq->msgs[mq->current_num];
