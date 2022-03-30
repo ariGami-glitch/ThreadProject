@@ -20,13 +20,33 @@ int msgq_send(struct msgq *mq, char *msg) { //the producer in this case
     
     return 1;
 }
-char *msgq_recv(struct msgq *mq) {
-    //char *msg = mq->msgs[mq->current_num];
-    //free(mq->msgs[mq->current_num]);
-    
-    //return msg;
-    return "hello";
+char* getinfo(){
+    char *temp_msg;
+    if(head != NULL){
+        temp_msg = head->msgs;
+        head = head->next;
+    }
+    return temp_msg;
+
 }
+
+char *msgq_recv(struct msgq *mq) {
+    zem_t *mutex = malloc(sizeof(zem_t));
+    zem_t *empty = malloc(sizeof(zem_t));
+    zem_t *full = malloc(sizeof(zem_t));
+    zem_init(lock, 0);
+    zem_wait(full); // Line C0 (NEW LINE)
+    zem_wait(mutex); // Line C1
+    char* tmp = getinfo(); // Line C2
+    zem_post(mutex);
+    zem_post(empty);
+
+    printf("%s\n", tmp);
+
+    return tmp;
+}
+
+
 int msgq_len(struct msgq *mq) {
     return 10;
 }

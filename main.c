@@ -54,7 +54,7 @@ void *passiton(void *arg) {
         free(m);
     }
     return NULL;
-}
+} // done with function
 
 #define MSGQLEN 4
 
