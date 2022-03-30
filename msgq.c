@@ -4,8 +4,15 @@
 #include "msgq.h"
 //#include "zemaphore.h"
 
+struct msgq *head;
+struct msgq *tail;
+int maxmsgqsize;
+int currsize = 0;
 struct msgq *msgq_init(int num_msgs) {
     struct msgq *m = malloc(sizeof(struct msgq));
+    head = m;
+    tail = m;
+    printf("Current size of message queue: %d\n", currsize);
     return m;
 }
 int msgq_send(struct msgq *mq, char *msg) {
