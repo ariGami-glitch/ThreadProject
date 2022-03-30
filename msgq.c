@@ -17,7 +17,7 @@ char *msgq_recv(struct msgq *mq) {
     //free(mq->msgs[mq->current_num]);
     
     //return msg;
-    return "hi";
+    return "hello";
 }
 int msgq_len(struct msgq *mq) {
     return 10;

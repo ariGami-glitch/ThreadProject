@@ -1,9 +1,7 @@
 #include <pthread.h> 
 typedef struct msgq {
-    int num_msgs;
-    char **msgs;
-    int current_num;
-
+    char *msgs;
+    struct msgq *next;
 } msgq;
 
 struct msgq *msgq_init(int num_msgs);
