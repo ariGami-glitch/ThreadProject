@@ -13,10 +13,11 @@ int msgq_send(struct msgq *mq, char *msg) {
     return 10;
 }
 char *msgq_recv(struct msgq *mq) {
-    char *msg = mq->msgs[mq->current_num];
-    free(mq->msgs[mq->current_num]);
+    //char *msg = mq->msgs[mq->current_num];
+    //free(mq->msgs[mq->current_num]);
     
-    return msg;
+    //return msg;
+    return "hello";
 }
 int msgq_len(struct msgq *mq) {
     return 10;
