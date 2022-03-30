@@ -50,7 +50,7 @@ char* getinfo(){
 }
 
 char *msgq_recv(struct msgq *mq) {
-    zem_init(lock, 0);
+    //zem_init(lock, 0);
     zem_wait(full); // Line C0 (NEW LINE)
     zem_wait(mutex); // Line C1
     char* tmp = getinfo(); // Line C2
