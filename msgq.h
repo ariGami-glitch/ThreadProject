@@ -3,6 +3,7 @@ typedef struct msgq {
     int num_msgs;
     char **msgs;
     int current_num;
+
 } msgq;
 
 struct msgq *msgq_init(int num_msgs);
