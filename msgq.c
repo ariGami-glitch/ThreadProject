@@ -42,31 +42,40 @@ int msgq_send(struct msgq *mq, char *msg) { //the producer in this case
 char* getinfo(){
     char *temp_msg;
     if(head != NULL){
-        temp_msg = head->msgs;
+        temp_msg = head->msg;
         head = head->next;
+        free(head->msg);
     }
     return temp_msg;
 
 }
 
 char *msgq_recv(struct msgq *mq) {
-    zem_init(lock, 0);
-    zem_wait(full); // Line C0 (NEW LINE)
-    zem_wait(mutex); // Line C1
+    zem_wait(&full); // Line C0 (NEW LINE)
+    zem_wait(&mutex); // Line C1
     char* tmp = getinfo(); // Line C2
-    zem_post(mutex);
-    zem_post(empty);
+    zem_post(&mutex);
+    zem_post(&empty);
     printf("%s\n", tmp);
     return tmp;
 }
 
 
 int msgq_len(struct msgq *mq) {
-    do(mq == NULL)
+    int count = 0;
+    do{
+        count = count + 1;
+        mq = mq->next;
+
+    }while(mq != NULL);
     
 
-    return currsize;
+    return count;
 }
 void msgq_show(struct msgq *mq) {
+    do{
+        printf("%s", mq->msg);
+        mq = mq->next;
 
+    }while(mq != NULL);
 }
