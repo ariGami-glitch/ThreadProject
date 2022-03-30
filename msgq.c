@@ -48,7 +48,7 @@ char *msgq_recv(struct msgq *mq) {
 
 
 int msgq_len(struct msgq *mq) {
-    return 10;
+    return currsize;
 }
 void msgq_show(struct msgq *mq) {
 
