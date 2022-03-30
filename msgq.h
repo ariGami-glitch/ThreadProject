@@ -1,6 +1,6 @@
 #include <pthread.h> 
 typedef struct msgq {
-    char *msgs;
+    char *msg;
     struct msgq *next;
 } msgq;
 
