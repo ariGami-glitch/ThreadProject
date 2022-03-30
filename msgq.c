@@ -61,14 +61,18 @@ char *msgq_recv(struct msgq *mq) {
 
 
 int msgq_len(struct msgq *mq) {
-    do
-    {
-        printf("%s",mq->msg);
+    int count = 0;
+    do{
+        count = count + 1;
         mq = mq->next;
     }while(mq != NULL)
 
-    return currsize;
+    return count;
 }
 void msgq_show(struct msgq *mq) {
-
+    do
+    {
+        printf("%s",mq->msg)
+        mq = mq->next;
+    }while(mq != NULL)
 }
