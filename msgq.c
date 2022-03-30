@@ -50,23 +50,21 @@ char* getinfo(){
 }
 
 char *msgq_recv(struct msgq *mq) {
-    zem_t *mutex = malloc(sizeof(zem_t));
-    zem_t *empty = malloc(sizeof(zem_t));
-    zem_t *full = malloc(sizeof(zem_t));
     zem_init(lock, 0);
     zem_wait(full); // Line C0 (NEW LINE)
     zem_wait(mutex); // Line C1
     char* tmp = getinfo(); // Line C2
     zem_post(mutex);
     zem_post(empty);
-
     printf("%s\n", tmp);
-
     return tmp;
 }
 
 
 int msgq_len(struct msgq *mq) {
+    do(mq == NULL)
+    
+
     return currsize;
 }
 void msgq_show(struct msgq *mq) {
