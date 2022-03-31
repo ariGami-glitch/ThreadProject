@@ -36,7 +36,6 @@ void *recvMsgs(void *arg) {
 
     printf("mq msg_count: %d\n", msg_count);
     for (int i = 0; i < msg_count; i++) {
-        printf("cool");
 
         char *m = msgq_recv(mq);
         printf("recvMsgs: %s\n", m);

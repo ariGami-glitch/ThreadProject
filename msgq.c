@@ -28,15 +28,14 @@ int msgq_send(struct msgq *mq, char *msg) { //the producer in this case
     zem_wait(&empty);
     zem_wait(&mutex);
     if(tail->msg == NULL){
-        tail->msg = msg;
-        printf("tail msg = %s",tail->msg = msg );
+        tail->msg = strdup(msg);
     }
     else{
-    struct msgq *nm = malloc(sizeof(struct msgq));
-    nm->msg = strdup(msg);
-    tail->next = nm;
-    tail = tail->next;
-        }
+        struct msgq *nm = malloc(sizeof(struct msgq));
+        nm->msg = strdup(msg);
+        tail->next = nm;
+        tail = tail->next;
+    }
 
     zem_post(&mutex);
     zem_post(&full);
