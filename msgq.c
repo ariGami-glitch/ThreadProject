@@ -3,8 +3,7 @@
 #include <pthread.h>
 #include "msgq.h"
 #include "zemaphore.h"
-
-struct msgq *head;
+#include <string.h>
 struct msgq *tail;
 int maxmsgqsize;
 int currsize = 0;
@@ -15,7 +14,6 @@ zem_t full, empty, mutex;
 struct msgq *msgq_init(int num_msgs) {
     struct msgq *m = malloc(sizeof(struct msgq));
     maxmsgqsize = num_msgs;
-    head = m;
     tail = m;
     //initialize
     zem_init(&empty, num_msgs);
@@ -41,12 +39,12 @@ int msgq_send(struct msgq *mq, char *msg) { //the producer in this case
     zem_post(&full);
     return 1;
 }
-char* getinfo(){
+char* getinfo(struct msgq *mq){
     char *temp_msg;
-    if(head != NULL) {
-        temp_msg = head->msg;
-        free(head->msg);
-        head = head->next;
+    if(mq != NULL) {
+        temp_msg = mq->msg;
+        //free(head->msg);
+        //mq = mq->next;
     }
 
 
@@ -57,10 +55,13 @@ char* getinfo(){
 char *msgq_recv(struct msgq *mq) {
     zem_wait(&full); // Line C0 (NEW LINE)
     zem_wait(&mutex); // Line C1
-    char* tmp = getinfo(); // Line C2
+    //char* tmp = getinfo(mq); // Line C2
+    //printf("%s\n", mq->msg);
+    char *tmp;
+    tmp = mq->msg;
     zem_post(&mutex);
     zem_post(&empty);
-    printf("%s\n", tmp);
+    printf("%s\n", mq->msg);
 
 
     return tmp;
@@ -81,8 +82,13 @@ int msgq_len(struct msgq *mq) {
 }
 void msgq_show(struct msgq *mq) {
     struct msgq *temp_mq = mq;
-    do{
+    /*do{
         printf("%s\n", temp_mq->msg);
         temp_mq = temp_mq->next;
-    }while(temp_mq != NULL);
+    }while(temp_mq != NULL);*/
+    while(temp_mq != NULL) {
+        printf("%s\n", temp_mq->msg);
+        temp_mq = temp_mq->next;
+        
+    }
 }
