@@ -73,6 +73,7 @@ int main(int argc, char *argv[]) {
         msgq_show(mq);
         pthread_create(&p2, NULL, recvMsgs, NULL);
         pthread_join(p2, NULL);
+
         printf("msgq_show() after all consumed by test 1:\n");
         msgq_show(mq);
         break;

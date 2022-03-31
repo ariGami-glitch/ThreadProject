@@ -25,8 +25,6 @@ struct msgq *msgq_init(int num_msgs) {
     return m;
 }
 int msgq_send(struct msgq *mq, char *msg) { //the producer in this case
-    int i;
-    for(i = 0; i < maxmsgqsize; i++) {
         zem_wait(&empty);
         zem_wait(&mutex);
         mq->msg = strdup(msg);
@@ -36,7 +34,6 @@ int msgq_send(struct msgq *mq, char *msg) { //the producer in this case
         currsize++;
         zem_post(&mutex);
         zem_post(&full);
-    }
     return 1;
 }
 char* getinfo(){
