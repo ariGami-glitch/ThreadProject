@@ -30,7 +30,7 @@ struct msgq *msgq_init(int num_msgs) {
     zem_init(&m->mutex, 1);
     m->num_msgs = 0;
     m->max_msgs = num_msgs;
-    m->head = m->tail;
+    m->head = m->tail = 0;
     
     return m;
 }
