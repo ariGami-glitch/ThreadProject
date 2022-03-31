@@ -39,7 +39,7 @@ void *recvMsgs(void *arg) {
 
         char *m = msgq_recv(mq);
         printf("recvMsgs: %s\n", m);
-        mq = mq->next;
+        //mq = mq->next;
 
         //free(m);
     }

@@ -1,7 +1,21 @@
 #include <pthread.h> 
+
+typedef struct msg {
+    char *msg;
+    struct msg *next;
+} msg;
 typedef struct msgq {
     char *msg;
     struct msgq *next;
+    struct msg *m;
+    
+    zem_t empty;
+    zem_t full;
+    zem_t mutex;
+    struct msg *head;
+    struct msg *tail;
+    int max_msgs;
+    int num_msgs;
 } msgq;
 
 struct msgq *msgq_init(int num_msgs);
