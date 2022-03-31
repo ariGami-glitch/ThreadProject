@@ -59,9 +59,10 @@ char *msgq_recv(struct msgq *mq) {
     //printf("%s\n", mq->msg);
     char *tmp;
     tmp = mq->msg;
+    //mq = mq->next;
     zem_post(&mutex);
     zem_post(&empty);
-    printf("%s\n", mq->msg);
+   // printf("%s\n", mq->msg);
 
 
     return tmp;
