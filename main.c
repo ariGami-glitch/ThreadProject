@@ -32,10 +32,15 @@ void *promtAndSend(void *arg) {
 void *recvMsgs(void *arg) {
     sleep(5);
     int msg_count = msgq_len(mq);
+    char response[80];
+
     printf("mq msg_count: %d\n", msg_count);
     for (int i = 0; i < msg_count; i++) {
+        printf("cool");
+
         char *m = msgq_recv(mq);
         printf("recvMsgs: %s\n", m);
+
         //free(m);
     }
     return NULL;
@@ -73,7 +78,6 @@ int main(int argc, char *argv[]) {
         msgq_show(mq);
         pthread_create(&p2, NULL, recvMsgs, NULL);
         pthread_join(p2, NULL);
-
         printf("msgq_show() after all consumed by test 1:\n");
         msgq_show(mq);
         break;

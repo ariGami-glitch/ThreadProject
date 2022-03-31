@@ -25,24 +25,32 @@ struct msgq *msgq_init(int num_msgs) {
     return m;
 }
 int msgq_send(struct msgq *mq, char *msg) { //the producer in this case
-        zem_wait(&empty);
-        zem_wait(&mutex);
-        mq->msg = strdup(msg);
-        tail = mq;
-        struct msgq *nm = malloc(sizeof(struct msgq));
-        tail->next = nm;
-        currsize++;
-        zem_post(&mutex);
-        zem_post(&full);
+    zem_wait(&empty);
+    zem_wait(&mutex);
+    if(tail->msg == NULL){
+        tail->msg = msg;
+        printf("tail msg = %s",tail->msg = msg );
+    }
+    else{
+    struct msgq *nm = malloc(sizeof(struct msgq));
+    nm->msg = strdup(msg);
+    tail->next = nm;
+    tail = tail->next;
+        }
+
+    zem_post(&mutex);
+    zem_post(&full);
     return 1;
 }
 char* getinfo(){
     char *temp_msg;
-    if(head != NULL){
+    if(head != NULL) {
         temp_msg = head->msg;
-        head = head->next;
         free(head->msg);
+        head = head->next;
     }
+
+
     return temp_msg;
 
 }
@@ -54,25 +62,28 @@ char *msgq_recv(struct msgq *mq) {
     zem_post(&mutex);
     zem_post(&empty);
     printf("%s\n", tmp);
+
+
     return tmp;
 }
 
 
 int msgq_len(struct msgq *mq) {
     int count = 0;
+    struct msgq *temp_mq = mq;
     do{
         count = count + 1;
-        mq = mq->next;
+        temp_mq = temp_mq->next;
 
-    }while(mq != NULL);
+    }while(temp_mq != NULL);
     
 
     return count;
 }
 void msgq_show(struct msgq *mq) {
+    struct msgq *temp_mq = mq;
     do{
-        printf("%s", mq->msg);
-        mq = mq->next;
-
-    }while(mq != NULL);
+        printf("%s\n", temp_mq->msg);
+        temp_mq = temp_mq->next;
+    }while(temp_mq != NULL);
 }
