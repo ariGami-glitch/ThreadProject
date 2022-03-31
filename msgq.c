@@ -60,6 +60,8 @@ int msgq_send(struct msgq *mq, char *msg) { //the producer in this case
     zem_wait(&mq->mutex);
     //create msg struct
     //call method and pass in the mq and the msg
+    put(mq, msg);
+    printf("msg: %s", mq->tail->msg);
     zem_post(&mq->mutex);
     zem_post(&mq->full);
 
@@ -82,6 +84,7 @@ void put(struct msgq *mq, char *msg) {
         mq->num_msgs++;
     }
 }
+
 char* getinfo(struct msgq *mq){
     char *temp_msg;
     if(mq != NULL) {
