@@ -33,9 +33,12 @@ void *promtAndSend(void *arg) {
 
 void *promtAndSendWithoutResponse(void *arg) {
     char **new_messages = (char**) arg;
-    for (int i = 0; i < sizeof(messages)/sizeof(char*); i++) {
-            printf("sending: %s\n", messages[i]);
-            msgq_send(mq, messages[i]);
+    printf("\nnum:%llu\n", sizeof(new_messages)/sizeof(char*));
+    int i = 0;
+    while(i <50) {
+            printf("\nsending: %s\n", new_messages[i]);
+            msgq_send(mq, new_messages[i]);
+            i++;
     }
     return NULL;
 }
@@ -147,12 +150,15 @@ int main(int argc, char *argv[]) {
       case '5':
         printf("solving the producer consumer problem");
             printf("test fill msgs and pass it on\n");
-            char *messages[] = { "a", "aa", "aaa", "aaaa", "aaaaa", "aaaaaa", "aaaaaaa", "aaaaaaaa", "aaaaaaaaa", "aaaaaaaaaa",
-                                  "b", "bb", "bbb", "bbbb", "bbbbb", "bbbbbb", "bbbbbbb","bbbbbbbb", "bbbbbbbbb", "bbbbbbbbbb"};
-            pthread_create(&p1, NULL, promtAndSendWithoutResponse, NULL);
+            char *messages2[] = { "a", "aa", "aaa", "aaaa", "aaaaa", "aaaaaa", "aaaaaaa", "aaaaaaaa", "aaaaaaaaa", "aaaaaaaaaa",
+                                  "b", "bb", "bbb", "bbbb", "bbbbb", "bbbbbb", "bbbbbbb","bbbbbbbb", "bbbbbbbbb", "bbbbbbbbbb",
+                                  "c", "cc", "ccc", "cccc", "ccccc", "cccccc", "ccccccc" , "cccccccc", "ccccccccc", "cccccccccc",
+                                   "d", "dd", "ddd", "dddd", "ddddd", "dddddd", "ddddddd", "dddddddd", "ddddddddd", "dddddddddd",
+                                   "e", "ee", "eee", "eeee", "eeeee", "eeeeee", "eeeeeee", "eeeeeeee", "eeeeeeeee", "eeeeeeeeee"};
+            pthread_create(&p1, NULL, promtAndSendWithoutResponse, (void *)messages2);
             pthread_join(p1, NULL);
 
-            pthread_create(&p2, NULL, promtAndSendWithoutResponse, NULL);
+            pthread_create(&p2, NULL, promtAndSendWithoutResponse, (void *)messages2);
             pthread_join(p2, NULL);
             sleep(5);
             printf("msgq_show() after filling for test 2:\n");
@@ -164,27 +170,27 @@ int main(int argc, char *argv[]) {
             pthread_join(p1, NULL);
             pthread_join(p2, NULL);
             pthread_join(p3, NULL);
-            printf("\nc1\n\n");
+            printf("\nc1\n");
             for (int i = 0; i < sizeof(c1)/sizeof(char*); i++) {
                 if(c1[i] == NULL){
                     break;
                 }
-                printf("\n%s",c1[i] );
+                printf("\n%s\n",c1[i] );
 
             }
-            printf("\nc2\n\n");
+            printf("\nc2\n");
             for (int i = 0; i < sizeof(c2)/sizeof(char*); i++) {
                 if(c2[i] == NULL){
                     break;
                 }
-                printf("\n%s",c2[i] );
+                printf("\n%s\n",c2[i] );
             }
-            printf("\nc3\n\n");
+            printf("\nc3\n");
             for (int i = 0; i < sizeof(c3)/sizeof(char*); i++) {
                 if(c3[i] == NULL){
                     break;
                 }
-                printf("\n%s",c3[i] );
+                printf("\n%s\n",c3[i] );
             }
 
 
