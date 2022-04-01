@@ -32,6 +32,7 @@ void *promtAndSend(void *arg) {
 }
 
 void *promtAndSendWithoutResponse(void *arg) {
+    char **new_messages = (char**) arg;
     for (int i = 0; i < sizeof(messages)/sizeof(char*); i++) {
             printf("sending: %s\n", messages[i]);
             msgq_send(mq, messages[i]);
@@ -73,14 +74,14 @@ void *passiton(void *arg) {
 } // done with function
 
 void *passiton2(void *arg) {
-    char (*array)[100] = arg;
+    char **array = (char**) arg;
 
     int count = 0;
     while(msgq_len(mq) != 0) {
 
         char *m = msgq_recv(mq);
 
-        strcpy(array[count], strdup(m));
+        array[count] = strdup(m);
         count++;
 
 
@@ -146,6 +147,8 @@ int main(int argc, char *argv[]) {
       case '5':
         printf("solving the producer consumer problem");
             printf("test fill msgs and pass it on\n");
+            char *messages[] = { "a", "aa", "aaa", "aaaa", "aaaaa", "aaaaaa", "aaaaaaa", "aaaaaaaa", "aaaaaaaaa", "aaaaaaaaaa",
+                                  "b", "bb", "bbb", "bbbb", "bbbbb", "bbbbbb", "bbbbbbb","bbbbbbbb", "bbbbbbbbb", "bbbbbbbbbb"};
             pthread_create(&p1, NULL, promtAndSendWithoutResponse, NULL);
             pthread_join(p1, NULL);
 
@@ -154,7 +157,6 @@ int main(int argc, char *argv[]) {
             sleep(5);
             printf("msgq_show() after filling for test 2:\n");
             msgq_show(mq);
-            //static char *c1[100], *c2[100], *c3[100];
             pthread_create(&p1, NULL, passiton2, (void *)&c1);
             pthread_create(&p2, NULL, passiton2, (void *)&c2);
             pthread_create(&p3, NULL, passiton2, (void *)&c3);
@@ -162,29 +164,31 @@ int main(int argc, char *argv[]) {
             pthread_join(p1, NULL);
             pthread_join(p2, NULL);
             pthread_join(p3, NULL);
-
+            printf("\nc1\n\n");
             for (int i = 0; i < sizeof(c1)/sizeof(char*); i++) {
-                printf("\n1c%d",i);
                 if(c1[i] == NULL){
                     break;
                 }
-                printf("msg: %s", c1[0]);
+                printf("\n%s",c1[i] );
+
             }
+            printf("\nc2\n\n");
             for (int i = 0; i < sizeof(c2)/sizeof(char*); i++) {
-                printf("\n2c%d",i);
-                if(c2[i] == 0){
+                if(c2[i] == NULL){
                     break;
                 }
-//                printf("%s", c1[i]);
+                printf("\n%s",c2[i] );
             }
+            printf("\nc3\n\n");
             for (int i = 0; i < sizeof(c3)/sizeof(char*); i++) {
-                printf("\n3c%d",i);
-                if(c3[i] == 0){
+                if(c3[i] == NULL){
                     break;
                 }
-//                printf("%s", c1[i]);
+                printf("\n%s",c3[i] );
             }
-        //message queue and 5 threads. Two threads are the producers and three are the consumers
+
+
+                //message queue and 5 threads. Two threads are the producers and three are the consumers
         //producer generate 50 messages
         //argument passed to select messages generated
         //consumers save messages in static arrays, one for each consumer
