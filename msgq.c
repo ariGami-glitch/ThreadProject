@@ -91,6 +91,7 @@ char* getinfo(struct msgq *mq){
 //    strcpy(temp_msg,mq->head->msg);
 //    free(mq->head->msg);
     mq->head = mq->head->next;
+    mq->num_msgs--;
     return temp_msg;
 }
 
@@ -109,16 +110,7 @@ char *msgq_recv(struct msgq *mq) {
 
 
 int msgq_len(struct msgq *mq) {
-    int count = 0;
-    struct msg *temp_mq = mq->head;
-    do{
-        count = count + 1;
-        temp_mq = temp_mq->next;
-
-    }while(temp_mq != NULL);
-    
-
-    return count;
+    return mq->num_msgs;;
 }
 void msgq_show(struct msgq *mq) {
     struct msg *temp_mq = mq->head;
