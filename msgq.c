@@ -26,7 +26,7 @@ struct msgq *msgq_init(int num_msgs) {
 
     /*The new code*/
     zem_init(&m->empty, num_msgs);
-    zem_init(&m->full, 0);
+    zem_init(&m->full, 1);
     zem_init(&m->mutex, 1);
     m->num_msgs = 0;
     m->max_msgs = num_msgs;
@@ -71,7 +71,7 @@ int msgq_send(struct msgq *mq, char *msg) { //the producer in this case
 void mput(struct msgq *mq, char *msg) {
     struct msg *m = malloc(sizeof(struct msg));
     m->msg = strdup(msg);
-    if(mq->num_msgs < mq->max_msgs) {
+    /*if(mq->num_msgs < mq->max_msgs) {
         //head is null
         if(mq->head == NULL) {
             mq->head = m;
@@ -82,7 +82,17 @@ void mput(struct msgq *mq, char *msg) {
             mq->tail = mq->tail->next;
         }
         mq->num_msgs++;
+    }*/
+    if(mq->head == NULL) {
+        mq->head = m;
+        mq->tail = mq->head;
     }
+    else {
+        mq->tail->next = m;
+        mq->tail = mq->tail->next;
+    }
+    mq->num_msgs++;
+
 }
 
 char* getinfo(struct msgq *mq){
@@ -98,11 +108,12 @@ char* getinfo(struct msgq *mq){
 char *msgq_recv(struct msgq *mq) {
     zem_wait(&mq->full); // Line C0 (NEW LINE)
     zem_wait(&mq->mutex); // Line C1
+    //printf("%s\n", mq->msg);
     char* tmp = getinfo(mq); // Line C2
     zem_post(&mq -> mutex);
 
     zem_post(&mq -> empty);
-   // printf("%s\n", mq->msg);
+    //printf("%s\n", mq->msg);
 
 
     return tmp;

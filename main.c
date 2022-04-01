@@ -93,10 +93,24 @@ int main(int argc, char *argv[]) {
         break;
       case '3':
         printf("test that send_msg blocks when the message queue contains num_msgs\n");
+        printf("test fill and empty msgq\n");
+        pthread_create(&p1, NULL, promtAndSend, NULL);
+        pthread_join(p1, NULL);
+        printf("msgq_show() after filling for test 1:\n");
+        msgq_show(mq);
+        pthread_create(&p2, NULL, promtAndSend, NULL);
+        pthread_join(p2, NULL);
+        printf("msgq_show() after filling it again:\n");
+        msgq_show(mq);
+        break;
         
         break;
       case '4':
         printf("test that recv_msg blocks when the message queue is empty\n");
+        pthread_create(&p2, NULL, recvMsgs, NULL);
+        pthread_join(p2, NULL);
+        printf("msgq_show() after all consumed by test 1:\n");
+        msgq_show(mq);
 
         break;
       case '5':
