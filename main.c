@@ -4,6 +4,9 @@
 #include <pthread.h>
 #include "zemaphore.h"
 #include "msgq.h"
+#include <string.h>
+
+static char *c1[100], *c2[100], *c3[100];
 
 // SEE Labs/GdbLldbLab for more information on lldb - lowlevel debugger
 
@@ -70,11 +73,18 @@ void *passiton(void *arg) {
 } // done with function
 
 void *passiton2(void *arg) {
-    int me = (int) arg;
+    char (*array)[100] = arg;
+
+    int count = 0;
     while(msgq_len(mq) != 0) {
-        sleep(1);
+
         char *m = msgq_recv(mq);
-        printf("\n%dHERE %s", me, m);
+
+        strcpy(array[count], strdup(m));
+        count++;
+
+
+        printf("\nHERE %s", array[count - 1]);
         free(m);
     }
     return NULL;
@@ -141,18 +151,44 @@ int main(int argc, char *argv[]) {
 
             pthread_create(&p2, NULL, promtAndSendWithoutResponse, NULL);
             pthread_join(p2, NULL);
+            sleep(5);
             printf("msgq_show() after filling for test 2:\n");
             msgq_show(mq);
-            pthread_create(&p1, NULL, passiton2, (void *)1);
-            pthread_create(&p2, NULL, passiton2, (void *)2);
-            pthread_create(&p3, NULL, passiton2, (void *)3);
+            //static char *c1[100], *c2[100], *c3[100];
+            pthread_create(&p1, NULL, passiton2, (void *)&c1);
+            pthread_create(&p2, NULL, passiton2, (void *)&c2);
+            pthread_create(&p3, NULL, passiton2, (void *)&c3);
+
             pthread_join(p1, NULL);
             pthread_join(p2, NULL);
             pthread_join(p3, NULL);
+
+            for (int i = 0; i < sizeof(c1)/sizeof(char*); i++) {
+                printf("\n1c%d",i);
+                if(c1[i] == NULL){
+                    break;
+                }
+                printf("msg: %s", c1[0]);
+            }
+            for (int i = 0; i < sizeof(c2)/sizeof(char*); i++) {
+                printf("\n2c%d",i);
+                if(c2[i] == 0){
+                    break;
+                }
+//                printf("%s", c1[i]);
+            }
+            for (int i = 0; i < sizeof(c3)/sizeof(char*); i++) {
+                printf("\n3c%d",i);
+                if(c3[i] == 0){
+                    break;
+                }
+//                printf("%s", c1[i]);
+            }
         //message queue and 5 threads. Two threads are the producers and three are the consumers
         //producer generate 50 messages
         //argument passed to select messages generated
         //consumers save messages in static arrays, one for each consumer
+        break;
       default:
         printf("invalid test selection!\n");
         break;
