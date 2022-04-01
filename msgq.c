@@ -30,7 +30,7 @@ struct msgq *msgq_init(int num_msgs) {
     zem_init(&m->mutex, 1);
     m->num_msgs = 0;
     m->max_msgs = num_msgs;
-    m->head = m->tail = 0;
+    m->head = m->tail;
     
     return m;
 }
@@ -87,27 +87,20 @@ void mput(struct msgq *mq, char *msg) {
 
 char* getinfo(struct msgq *mq){
     char *temp_msg;
-    if(mq != NULL) {
-        temp_msg = mq->msg;
-        //free(head->msg);
-        //mq = mq->next;
-    }
-
-
+    temp_msg = mq->head->msg;
+//    strcpy(temp_msg,mq->head->msg);
+//    free(mq->head->msg);
+    mq->head = mq->head->next;
     return temp_msg;
-
 }
 
 char *msgq_recv(struct msgq *mq) {
-    zem_wait(&full); // Line C0 (NEW LINE)
-    zem_wait(&mutex); // Line C1
-    //char* tmp = getinfo(mq); // Line C2
-    //printf("%s\n", mq->msg);
-    char *tmp;
-    tmp = mq->msg;
-    mq = mq->next;
-    zem_post(&mutex);
-    zem_post(&empty);
+    zem_wait(&mq->full); // Line C0 (NEW LINE)
+    zem_wait(&mq->mutex); // Line C1
+    char* tmp = getinfo(mq); // Line C2
+    zem_post(&mq -> mutex);
+
+    zem_post(&mq -> empty);
    // printf("%s\n", mq->msg);
 
 
@@ -117,7 +110,7 @@ char *msgq_recv(struct msgq *mq) {
 
 int msgq_len(struct msgq *mq) {
     int count = 0;
-    struct msgq *temp_mq = mq;
+    struct msg *temp_mq = mq->head;
     do{
         count = count + 1;
         temp_mq = temp_mq->next;
@@ -128,7 +121,7 @@ int msgq_len(struct msgq *mq) {
     return count;
 }
 void msgq_show(struct msgq *mq) {
-    struct msgq *temp_mq = mq;
+    struct msg *temp_mq = mq->head;
     /*do{
         printf("%s\n", temp_mq->msg);
         temp_mq = temp_mq->next;

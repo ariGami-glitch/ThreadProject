@@ -32,7 +32,6 @@ void *promtAndSend(void *arg) {
 void *recvMsgs(void *arg) {
     sleep(5);
     int msg_count = msgq_len(mq);
-    char response[80];
 
     printf("mq msg_count: %d\n", msg_count);
     for (int i = 0; i < msg_count; i++) {
@@ -41,7 +40,7 @@ void *recvMsgs(void *arg) {
         printf("recvMsgs: %s\n", m);
         //mq = mq->next;
 
-        //free(m);
+//       free(m);
     }
     return NULL;
 }
