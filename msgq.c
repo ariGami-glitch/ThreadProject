@@ -13,13 +13,13 @@ zem_t full, empty, mutex;
 
 struct msgq *msgq_init(int num_msgs) {
     struct msgq *m = malloc(sizeof(struct msgq));
-    maxmsgqsize = num_msgs;
+    /*maxmsgqsize = num_msgs;
     tail = m;
     //initialize
     zem_init(&empty, num_msgs);
     zem_init(&full, 0);
     zem_init(&mutex, 1);
-    //printf("Current size of message queue: %d\n", currsize);
+    //printf("Current size of message queue: %d\n", currsize);*/
 
 
 
@@ -35,7 +35,7 @@ struct msgq *msgq_init(int num_msgs) {
     return m;
 }
 int msgq_send(struct msgq *mq, char *msg) { //the producer in this case
-    zem_wait(&empty);
+    /*zem_wait(&empty);
     zem_wait(&mutex);
     struct msg *m = malloc(sizeof(struct msg));
     m->msg = strdup(msg);
@@ -52,7 +52,7 @@ int msgq_send(struct msgq *mq, char *msg) { //the producer in this case
 
     zem_post(&mutex);
     zem_post(&full);
-    
+    */
 
 
     /*New Code*/
