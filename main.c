@@ -92,6 +92,20 @@ int main(int argc, char *argv[]) {
         pthread_join(p1, NULL);
         pthread_join(p2, NULL);
         break;
+      case '3':
+        printf("test that send_msg blocks when the message queue contains num_msgs\n");
+        
+        break;
+      case '4':
+        printf("test that recv_msg blocks when the message queue is empty\n");
+
+        break;
+      case '5':
+        printf("solving the producer consumer problem");
+        //message queue and 5 threads. Two threads are the producers and three are the consumers
+        //producer generate 50 messages
+        //argument passed to select messages generated
+        //consumers save messages in static arrays, one for each consumer
       default:
         printf("invalid test selection!\n");
         break;
