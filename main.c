@@ -28,6 +28,15 @@ void *promtAndSend(void *arg) {
     return NULL;
 }
 
+void *promtAndSendWithoutResponse(void *arg) {
+    for (int i = 0; i < sizeof(messages)/sizeof(char*); i++) {
+            printf("sending: %s\n", messages[i]);
+            msgq_send(mq, messages[i]);
+    }
+    return NULL;
+}
+
+
 // consume messges in msgq
 void *recvMsgs(void *arg) {
     sleep(5);
@@ -60,10 +69,21 @@ void *passiton(void *arg) {
     return NULL;
 } // done with function
 
-#define MSGQLEN 4
+void *passiton2(void *arg) {
+    int me = (int) arg;
+    while(msgq_len(mq) != 0) {
+        sleep(1);
+        char *m = msgq_recv(mq);
+        printf("\n%dHERE %s", me, m);
+        free(m);
+    }
+    return NULL;
+} // done with function
+
+#define MSGQLEN 100
 
 int main(int argc, char *argv[]) {
-    pthread_t p1, p2;
+    pthread_t p1, p2,p3, p4, p5;
     mq = msgq_init(MSGQLEN);
     char test = '1';
     if (argc == 2)
@@ -115,6 +135,20 @@ int main(int argc, char *argv[]) {
         break;
       case '5':
         printf("solving the producer consumer problem");
+            printf("test fill msgs and pass it on\n");
+            pthread_create(&p1, NULL, promtAndSendWithoutResponse, NULL);
+            pthread_join(p1, NULL);
+
+            pthread_create(&p2, NULL, promtAndSendWithoutResponse, NULL);
+            pthread_join(p2, NULL);
+            printf("msgq_show() after filling for test 2:\n");
+            msgq_show(mq);
+            pthread_create(&p1, NULL, passiton2, (void *)1);
+            pthread_create(&p2, NULL, passiton2, (void *)2);
+            pthread_create(&p3, NULL, passiton2, (void *)3);
+            pthread_join(p1, NULL);
+            pthread_join(p2, NULL);
+            pthread_join(p3, NULL);
         //message queue and 5 threads. Two threads are the producers and three are the consumers
         //producer generate 50 messages
         //argument passed to select messages generated

@@ -106,15 +106,19 @@ char* getinfo(struct msgq *mq){
 }
 
 char *msgq_recv(struct msgq *mq) {
+    char* tmp = "";
     zem_wait(&mq->full); // Line C0 (NEW LINE)
     zem_wait(&mq->mutex); // Line C1
     //printf("%s\n", mq->msg);
-    char* tmp = getinfo(mq); // Line C2
+
+    tmp = getinfo(mq); // Line C2
+
     zem_post(&mq -> mutex);
     zem_post(&mq -> empty);
     //printf("%s\n", mq->msg);
 
 
+    printf("\n%sljlkadsjf\n", tmp);
     return tmp;
 }
 
